@@ -1,0 +1,9 @@
+.idea/
+
+dohblast
+
+*.log
+*.exe
+
+!vendor/
+
