@@ -30,12 +30,13 @@ func KeepAliveCmd(endpoint string, interval time.Duration, verbose bool) {
 			m := new(dns.Msg)
 			m.SetQuestion(qn, dns.TypeA)
 
-			_, err := doh.QueryDoH(endpoint, *m)
+			res, err := doh.QueryDoH(endpoint, *m)
 			if err != nil {
 				fmt.Printf("Request has Failed with error: %q\n", err.Error())
 			}
 			if verbose {
 				fmt.Printf("[%s]: Sent A Query to %q in %s\n", time.Now().Format("15:04:05"), qn, time.Now().Sub(start).String())
+				fmt.Println(res.String())
 			}
 		}
 	}
