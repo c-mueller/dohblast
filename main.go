@@ -13,9 +13,15 @@ import (
 )
 
 var (
-	blastCmd    = kingpin.Command("blast", "Send Random A Requests to the given Endooint").Alias("b")
-	endpoint    = blastCmd.Arg("endpoint", "Endpoint").Required().String()
-	threadCount = blastCmd.Flag("thread-count", "Thread Count").Short('t').Default("4").Int()
+	blastCmd = kingpin.Command("blast", "Send Random A Requests to the given Endooint").Alias("b")
+
+	threadCountBlast = blastCmd.Command("threads", "Send requests by count of background daemons").Alias("t")
+	endpoint         = threadCountBlast.Arg("endpoint", "Endpoint").Required().String()
+	threadCount      = threadCountBlast.Arg("thread-count", "Thread Count").Required().Int()
+
+	rateBlast = blastCmd.Command("rate", "Send requests by count per second").Alias("r")
+	rendpoint = rateBlast.Arg("endpoint", "Endpoint").Required().String()
+	rate      = rateBlast.Arg("rate", "The number of requests per second to send").Required().Int()
 
 	tldWeightsCmd = kingpin.Command("tld-weights", "output the default tld weights as json")
 
@@ -40,8 +46,11 @@ func init() {
 
 func main() {
 	switch cmd {
-	case "blast":
-		blast.BlastCommand(*endpoint, *threadCount)
+	case "blast thread-count":
+		blast.BlastByThreadCountCommand(*endpoint, *threadCount)
+		break
+	case "blast rate":
+		blast.BlastByRateCommand(*rendpoint, *rate)
 		break
 	case "keep-alive":
 		keepalive.KeepAliveCmd(*kaEndpoint, *kaDuration, *verbose)
